@@ -1,7 +1,7 @@
 import express from 'express';
 import connectDB from './config/database.js';
 import { connectRedis } from './config/redis.js';
-import router from './routes/users.js';
+import router from './routes/index.js';
 import errorHandler from './middlewares/errorHandler.js';
 import config from './config/environment.js';
 

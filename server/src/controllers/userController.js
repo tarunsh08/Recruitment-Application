@@ -3,6 +3,10 @@ import UserService from "../services/userService.js";
 class UserController {
   constructor() {
     this.userService = new UserService();
+    this.register = this.register.bind(this);
+    this.login = this.login.bind(this);
+    this.getUser = this.getUser.bind(this);
+    this.updateUser = this.updateUser.bind(this);
   }
 
   async register(req, res, next) {
@@ -47,4 +51,4 @@ class UserController {
   }
 }
 
-export default new UserController;
+export default new UserController();

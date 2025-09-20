@@ -3,7 +3,7 @@ import MongoUserRepository from '../repositories/implementations/MongoUserReposi
 import RedisCacheRepository from '../repositories/implementations/RedisCacheRepository.js';
 import AppError from '../utils/error.js';
 import jwt from 'jsonwebtoken';
-import JWT_SECRET from '../config/environment.js'
+import config from '../config/environment.js'
 
 class UserService {
     constructor() {
@@ -54,7 +54,7 @@ class UserService {
         const token = jwt.sign({
             id: user._id,
             role: user.role
-        }, JWT_SECRET, {expiresIn: '1h'});
+        }, config.JWT_SECRET, {expiresIn: '1h'});
 
         return {user: {
             id: user._id,
@@ -100,7 +100,7 @@ class UserService {
         const token = jwt.sign({
             id: user._id,
             role: user.role
-        }, JWT_SECRET, {expiresIn: '1h'});
+        }, config.JWT_SECRET, {expiresIn: '1h'});
 
         return {user: {
             id: user._id,
