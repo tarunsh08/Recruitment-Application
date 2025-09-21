@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import JWT_SECRET from "../config/environment.js";
+import config from "../config/environment.js";
 import AppError from "../utils/error.js";
 
 export default function authMiddleware(req, res, next) {
@@ -11,7 +11,7 @@ export default function authMiddleware(req, res, next) {
 
   const token = authHeader.split(" ")[1];
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, config.JWT_SECRET);
     req.user = { id: decoded.id, role: decoded.role };
     next();
   } catch (error) {

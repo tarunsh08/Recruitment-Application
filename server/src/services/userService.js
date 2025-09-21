@@ -68,21 +68,33 @@ class UserService {
         const schema = Joi.object({
             email: Joi.string().email().required(),
             password: Joi.string().required(),
-        })
-        const {error} = schema.validate({email, password});
+        });
+        const { error } = schema.validate({ email, password });
         if (error) {
             throw new AppError(error.message, 400);
         }
+
         const cacheKey = `user:email:${email}`;
         let user = await this.cacheRepository.get(cacheKey);
+        let fromCache = true;
+
         if (!user) {
             user = await this.userRepository.findUserByEmail(email);
+            fromCache = false;
             if (user) {
                 await this.cacheRepository.set(cacheKey, user, 3600);
             }
         }
-        if(!user) {
+
+        if (!user) {
             throw new AppError('Invalid credentials', 401);
+        }
+
+        if (fromCache) {
+            user = await this.userRepository.findUserByEmail(email);
+            if (!user) {
+                throw new AppError('Invalid credentials', 401);
+            }
         }
 
         const isMatch = await user.comparePassword(password);
@@ -90,6 +102,7 @@ class UserService {
             throw new AppError('Invalid credentials', 401);
         }
 
+        await this.cacheRepository.set(cacheKey, user, 3600);
         await this.cacheRepository.set(`user:id:${user._id}`, {
             id: user._id,
             email: user.email,
